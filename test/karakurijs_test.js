@@ -15,7 +15,8 @@ karakuri.click();
 
 karakuri.tapKey('a');
 karakuri.tapKey('!');
-karakuri.tapKey('あ');
+karakuri.tapKey('こ');
+karakuri.typeString('んにちは!!🍣');
 
 if (process.platform == 'darwin') {
     karakuri.tapKey('a', ['Command']);
