@@ -288,6 +288,20 @@ function typeString(text) {
 }
 
 /**
+ * @param {number} windowId
+ * @param {string[]} paths 
+ * @param {number} x 
+ * @param {number} y 
+ * @returns {boolean}
+ */
+function dropFiles(windowId, paths, x = 0, y = 0) {
+    if (win) {
+        return win.dropFiles(windowId, paths, x, y);
+    }
+    return false;
+}
+
+/**
  * @param {string} permission 
  * @returns {boolean}
  */
@@ -324,5 +338,6 @@ module.exports = {
     tapKey: tapKey,
     typeString: typeString,
     getDisplays: getDisplays,
+    dropFiles: dropFiles,
     requestPermission: requestPermission,
 };

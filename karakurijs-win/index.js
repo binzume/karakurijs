@@ -16,6 +16,14 @@ const user32 = process.platform == 'win32' && ffi.Library('user32.dll', {
     'VkKeyScanW': ['uint16', ['uint16']],
     'EnumDisplayDevicesW': ['bool', ['pointer', 'int32', 'pointer', 'int32']],
     'EnumDisplaySettingsExW': ['bool', ['pointer', 'int32', 'pointer', 'int32']],
+    'PostMessageW': ['bool', ['int32', 'int32', 'int64', 'int64']],
+});
+
+const kernel32 = process.platform == 'win32' && ffi.Library('kernel32.dll', {
+    'GlobalAlloc': ['int64', ['int32', 'int64']],
+    'GlobalLock': ['pointer', ['int64']],
+    'GlobalUnlock': ['bool', ['int64']],
+    'GlobalFree': ['int64', ['int64']],
 });
 
 const keys = {
@@ -145,7 +153,30 @@ function EnumWindows(proc, lpram = 0) {
     user32.EnumWindows(windowProc, lpram);
 }
 
+function dropFiles(hWnd, files, x, y, screenSpace = false) {
+    // TODO: Support OLE D&D.
+    const WM_DROPFILES = 0x233;
+    let dropbuf = Buffer.alloc(20);
+    let pathbuf = Buffer.from(files.join("\0") + "\0\0", 'ucs2');
+    dropbuf.writeUint32LE(dropbuf.byteLength, 0);
+    dropbuf.writeUint32LE(x, 4);
+    dropbuf.writeUint32LE(y, 8);
+    dropbuf.writeUint32LE(screenSpace ? 1 : 0, 12);
+    dropbuf.writeUint32LE(1, 16);
+    let sz = dropbuf.byteLength + pathbuf.byteLength;
+    let hBuf = kernel32.GlobalAlloc(0x40, sz);
+    if (hBuf == 0) {
+        return false;
+    }
+    let buf = kernel32.GlobalLock(hBuf).reinterpret(sz, 0);
+    pathbuf.copy(buf, dropbuf.byteLength);
+    dropbuf.copy(buf, 0);
+    kernel32.GlobalUnlock(hBuf);
+    return user32.PostMessageW(hWnd, WM_DROPFILES, hBuf, 0);
+}
+
 module.exports = {
+    // user32
     GetWindowRect: GetWindowRect,
     SetForegroundWindow: user32.SetForegroundWindow,
     WindowFromPoint: WindowFromPoint,
@@ -154,10 +185,13 @@ module.exports = {
     SendInput: SendInput,
     GetWindowThreadProcessId: GetWindowThreadProcessId,
     GetWindowText: GetWindowText,
-    keyToVk: keyToVk,
     EnumDisplayDevices: EnumDisplayDevices,
     EnumDisplaySettings: EnumDisplaySettings,
     EnumWindows: EnumWindows,
     IsWindowVisible: user32.IsWindowVisible,
     IsIconic: user32.IsIconic,
+    PostMessage: user32.PostMessageW,
+    // utils
+    keyToVk: keyToVk,
+    dropFiles: dropFiles,
 };
