@@ -9,6 +9,7 @@ const mac = process.platform == 'darwin' ? (() => {
     }
 })() : null;
 
+// TODO: move to karakurijs-robotjs/index.js
 const robot = process.platform != 'win32' ? require("hurdle-robotjs") : null;
 robot?.setKeyboardDelay(1);
 robot?.setMouseDelay(1);
@@ -216,15 +217,34 @@ const robotjsKeys = {
 };
 
 /**
- * @param {string} key
- * @param {boolean} down
- * @param {string[]} modifiers 'Control', 'Shift', 'Alt', 'Meta'(Command)
+ * (Windows)
+ *
+ * @param {string} key 
  * @returns {boolean}
  */
-function toggleKey(key, down, modifiers = []) {
+function getKeyState(key) {
     if (key == 'Unidentified') {
         return false;
     }
+    if (win) {
+        let vk = win.keyToVk(key);
+        if (vk == undefined) { return false; }
+        return (win.GetAsyncKeyState(vk) & 0x8000) != 0;
+    }
+    return false;
+}
+
+/**
+ * @param {string} key
+ * @param {boolean} down
+ * @param {string[]|null} modifiersOrNull 'Control', 'Shift', 'Alt', 'Meta'(Command), null(auto)
+ * @returns {boolean}
+ */
+function setKeyState(key, down, modifiersOrNull = []) {
+    if (key == 'Unidentified') {
+        return false;
+    }
+    let modifiers = modifiersOrNull || [];
     if (win) {
         let keys = [];
         let flags = down ? 0 : 0x0002;
@@ -233,7 +253,7 @@ function toggleKey(key, down, modifiers = []) {
             vk && keys.push({ key: { vk: vk, flags: flags } });
         }
         let vk = win.keyToVk(key);
-        if (key.length == 1 && (vk == undefined || vk & 0x100 && modifiers.length == 0)) {
+        if (key.length == 1 && (vk == undefined || vk & 0x100 && modifiersOrNull === null)) {
             return win.SendInput([{ key: { scan: key.charCodeAt(0), flags: flags | 0x0004 } }]) != 0;
         }
         if (vk == undefined) { return false; }
@@ -265,11 +285,11 @@ function toggleKey(key, down, modifiers = []) {
 
 /**
  * @param {string} key
- * @param {string[]} modifiers
+ * @param {string[]|null} modifiers
  */
-function tapKey(key, modifiers = []) {
-    toggleKey(key, true, modifiers);
-    toggleKey(key, false, modifiers);
+function tapKey(key, modifiers = null) {
+    setKeyState(key, true, modifiers);
+    setKeyState(key, false, modifiers);
 }
 
 /**
@@ -288,6 +308,8 @@ function typeString(text) {
 }
 
 /**
+ * (Windows)
+ *
  * @param {number} windowId
  * @param {string[]} paths 
  * @param {number} x 
@@ -334,7 +356,9 @@ module.exports = {
     setMousePos: setMousePos,
     click: click,
     toggleMouseButton: toggleMouseButton,
-    toggleKey: toggleKey,
+    getKeyState: getKeyState,
+    setKeyState: setKeyState,
+    toggleKey: setKeyState, // deprecated
     tapKey: tapKey,
     typeString: typeString,
     getDisplays: getDisplays,

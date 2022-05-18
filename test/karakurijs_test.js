@@ -7,12 +7,14 @@ let pos = karakuri.getMousePos();
 console.log(pos);
 let wid = karakuri.windowFromPoint(pos.x, pos.y);
 console.log(wid);
-let info = karakuri.getWindowInfo(wid);
-console.log(info);
+let w = karakuri.getWindowInfo(wid);
+console.log(w);
 karakuri.setForegroundWindow(wid);
 
 karakuri.click();
 
+karakuri.setKeyState('A', true);
+karakuri.setKeyState('A', false);
 karakuri.tapKey('a');
 karakuri.tapKey('!');
 karakuri.tapKey('こ');
@@ -23,3 +25,7 @@ if (process.platform == 'darwin') {
 } else {
     karakuri.tapKey('a', ['Control']);
 }
+
+// let files = ["C:/test.jpg"];
+// let p = karakuri.getMousePos();
+// console.log(karakuri.dropFiles(w.id, files, p.x - w.bounds.x, p.y - w.bounds.y));

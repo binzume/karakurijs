@@ -16,21 +16,24 @@ npm install karakurijs
 ```
 
 ```js
-const karakuri = require('karakurijs');
+const karakuri = require('..');
 
 let pos = karakuri.getMousePos();
 console.log(pos);
 let wid = karakuri.windowFromPoint(pos.x, pos.y);
 console.log(wid);
-let info = karakuri.getWindowInfo(wid);
-console.log(info);
+let w = karakuri.getWindowInfo(wid);
+console.log(w);
 karakuri.setForegroundWindow(wid);
 
 karakuri.click();
 
+karakuri.setKeyState('A', true);
+karakuri.setKeyState('A', false);
 karakuri.tapKey('a');
 karakuri.tapKey('!');
-karakuri.tapKey('あ');
+karakuri.tapKey('こ');
+karakuri.typeString('んにちは!!🍣');
 
 if (process.platform == 'darwin') {
     karakuri.tapKey('a', ['Command']);
@@ -52,8 +55,10 @@ button: 0: left, 1: middle, 2: right (same as MouseEvent.button)
 
 ### Keyboad
 
-- toggkeKey(key: string, down: boolean, modifiers: string[])
 - tapKey(key: string, modifiers: string[])
+- typeString(text: string)
+- setKeyState(key: string, down: boolean, modifiers: string[])
+- getKeyState(key: string)
 
 key: Same string as [KeyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values)
 
