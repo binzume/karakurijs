@@ -27,14 +27,19 @@ const kernel32 = process.platform == 'win32' && ffi.Library('kernel32.dll', {
     'GlobalFree': ['int64', ['int64']],
 });
 
-const keys = {
+// KeyboardEvent.key https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
+const keyMap = {
     backspace: 8, tab: 9, claer: 12, enter: 13, capslock: 0x14, shift: 16, control: 17, alt: 18,
-    escape: 0x1B, space: 0x20, ' ': 0x20, pageup: 0x21, pagedown: 0x22, end: 0x23, home: 0x24,
+    escape: 0x1B, ' ': 0x20, pageup: 0x21, pagedown: 0x22, end: 0x23, home: 0x24,
     arrowleft: 0x25, arrowup: 0x26, arrowright: 0x27, arrowdown: 0x28,
     insert: 0x2D, delete: 0x2E, meta: 0x5B,
-    kanamode: 0x15,
+    kanamode: 0x15, finalmode: 0x18, convert: 0x1C, nonconvert: 0x1D, modechange: 0x1F,
     f1: 0x70, f2: 0x71, f3: 0x72, f4: 0x73, f5: 0x74, f6: 0x75, f7: 0x76, f8: 0x77, f9: 0x78, f10: 0x79,
     f11: 0x7A, f12: 0x7B, f13: 0x7C, f14: 0x7D, f15: 0x7E, f16: 0x7F, f17: 0x80, f18: 0x81, f19: 0x82, f20: 0x80,
+    scrolllock: 0x91,
+    // .code
+    space: 0x20,
+    shiftleft: 0xA0, shiftright: 0xA1, controlleft: 0xA2, controlright: 0xA3, altleft: 0xA4, altright: 0xA5,
 }
 
 function GetWindowRect(hWnd) {
@@ -110,7 +115,7 @@ function GetWindowText(hWnd) {
  * @returns {number|undefined}
  */
 function keyToVk(key) {
-    let vk = keys[key.toLowerCase()];
+    let vk = keyMap[key.toLowerCase()];
     if (vk !== undefined) { return vk; }
     if (key.length != 1) { return undefined; }
     vk = user32.VkKeyScanW(key.charCodeAt(0));

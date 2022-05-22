@@ -280,16 +280,16 @@ function setKeyState(key, down, modifiersOrNull = []) {
         return;
     }
     robot.keyToggle(key, down ? 'down' : 'up', modifiers.map(m => robotjsKeys[m] || m.toLowerCase()).filter(m => m != key));
-    return false;
+    return true;
 }
 
 /**
  * @param {string} key
  * @param {string[]|null} modifiers
+ * @returns {boolean}
  */
 function tapKey(key, modifiers = null) {
-    setKeyState(key, true, modifiers);
-    setKeyState(key, false, modifiers);
+    return setKeyState(key, true, modifiers) && setKeyState(key, false, modifiers);
 }
 
 /**
