@@ -11,8 +11,8 @@
   "author": "binzume",
   "license": "MIT",
   "optionalDependencies": {
-    "karakurijs-mac": "file:karakurijs-mac",
-    "karakurijs-win": "file:karakurijs-win",
-    "karakurijs-robotjs": "file:karakurijs-robotjs"
+    "karakurijs-mac": "https://gitpkg.now.sh/binzume/karakurijs/karakurijs-mac/",
+    "karakurijs-win": "https://gitpkg.now.sh/binzume/karakurijs/karakurijs-win/",
+    "karakurijs-robotjs": "https://gitpkg.now.sh/binzume/karakurijs/karakurijs-robotjs/"
   }
 }
