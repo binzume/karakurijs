@@ -1,6 +1,6 @@
 {
   "name": "karakurijs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Desktop automation module for Node.js",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
   "author": "binzume",
   "license": "MIT",
   "optionalDependencies": {
-    "karakurijs-mac": "https://gitpkg.now.sh/binzume/karakurijs/karakurijs-mac/",
-    "karakurijs-win": "https://gitpkg.now.sh/binzume/karakurijs/karakurijs-win/",
-    "karakurijs-robotjs": "https://gitpkg.now.sh/binzume/karakurijs/karakurijs-robotjs/"
+    "karakurijs-mac": "https://gitpkg.now.sh/binzume/karakurijs/karakurijs-mac?v0.0.2",
+    "karakurijs-win": "https://gitpkg.now.sh/binzume/karakurijs/karakurijs-win?v0.0.2",
+    "karakurijs-robotjs": "https://gitpkg.now.sh/binzume/karakurijs/karakurijs-robotjs?v0.0.2"
   }
 }
