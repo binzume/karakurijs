@@ -342,18 +342,27 @@ function requestPermission(permission) {
         return true;
     }
     if (permission == 'screenCapture') {
-        // @ts-ignore
-        const { hasScreenCapturePermission, hasPromptedForPermission, openSystemPreferences } = require('mac-screen-capture-permissions');
-        if (!hasPromptedForPermission()) {
-            hasScreenCapturePermission();
-        } else {
-            openSystemPreferences();
-        }
-    }
-    if (permission == 'accessibility') {
+        return mac.hasScreenCaptureAccess();
+    } else if (permission == 'accessibility') {
         return mac.isProcessTrusted();
     }
-    return true;
+    return false;
+}
+
+/**
+ * @param {string} permission 
+ * @returns {boolean}
+ */
+ function queryPermission(permission) {
+    if (process.platform != 'darwin') {
+        return true;
+    }
+    if (permission == 'screenCapture') {
+        return mac.hasScreenCaptureAccess(false);
+    } else if (permission == 'accessibility') {
+        return mac.isProcessTrusted(false);
+    }
+    return false;
 }
 
 module.exports = {
@@ -374,4 +383,5 @@ module.exports = {
     getDisplays: getDisplays,
     dropFiles: dropFiles,
     requestPermission: requestPermission,
+    queryPermission: queryPermission,
 };

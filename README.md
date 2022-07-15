@@ -79,7 +79,8 @@ windowId: hWnd(Windows) or window number(MacOS)
 
 ### Permissions
 
-- requestPermission('screenCapture' | 'accessibility')
+- requestPermission('screenCapture' | 'accessibility'): boolean
+- queryPermission('screenCapture' | 'accessibility'): boolean
 
 
 ## License

@@ -11,8 +11,6 @@
   "devDependencies": {
     "node-gyp": "^8.4.0"
   },
-  "dependencies": {
-    "mac-screen-capture-permissions": "^2.0.0"
-  },
+  "dependencies": {},
   "os": ["darwin"]
 }
