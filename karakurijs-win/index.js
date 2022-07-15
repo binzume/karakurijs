@@ -3,6 +3,7 @@ const ffi = require('ffi-napi');
 const user32 = process.platform == 'win32' && ffi.Library('user32.dll', {
     'GetWindowRect': ['bool', ['int32', 'pointer']],
     'SetForegroundWindow': ['bool', ['int32']],
+    'GetForegroundWindow': ['int32', []],
     'WindowFromPoint': ['int32', ['int64']], // TODO; struct POINT
     'EnumWindows': ['bool', ['pointer', 'int32']],
     'GetWindowTextW': ['int32', ['int32', 'pointer', 'int32']],
@@ -185,6 +186,7 @@ module.exports = {
     // user32
     GetWindowRect: GetWindowRect,
     SetForegroundWindow: user32.SetForegroundWindow,
+    GetForegroundWindow: user32.GetForegroundWindow,
     WindowFromPoint: WindowFromPoint,
     GetCursorPos: GetCursorPos,
     SetCursorPos: user32.SetCursorPos,

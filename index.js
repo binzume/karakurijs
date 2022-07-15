@@ -15,8 +15,8 @@ robot?.setKeyboardDelay(1);
 robot?.setMouseDelay(1);
 
 /**
- * @param {{left: number, top: number, right: number, bottom: number}} rect
- * @returns {{x: number, y: number, width: number, height: number}}
+ * @param {{left: number, top: number, right: number, bottom: number}|null} rect
+ * @returns {{x: number, y: number, width: number, height: number}|null}
  */
 function rectToBounds(rect) {
     return rect ? { x: rect.left, y: rect.top, width: rect.right - rect.left, height: rect.bottom - rect.top } : null;
@@ -24,7 +24,7 @@ function rectToBounds(rect) {
 
 /**
  * @param {number} windowId
- * @returns {{x: number, y: number, width: number, height: number}}
+ * @returns {{x: number, y: number, width: number, height: number}|null}
  */
 function getWindowBounds(windowId) {
     if (win) {
@@ -35,7 +35,7 @@ function getWindowBounds(windowId) {
 
 /**
  * @param {number} windowId
- * @returns {{id: number, title: string, bounds: {x: number, y: number, width: number, height: number}, pid: number, tid?: number, visible?: boolean}}
+ * @returns {{id: number, title: string, bounds: {x: number, y: number, width: number, height: number}|null, pid: number, tid?: number, visible?: boolean}|null}
  */
 function getWindowInfo(windowId) {
     if (win) {
@@ -62,7 +62,7 @@ function getWindowInfo(windowId) {
  */
 function getWindows(all = false) {
     if (mac) {
-        let windows = win.getWindows();
+        let windows = mac.getWindows();
         return all ? windows : windows.filter((w) => w.layer == 0);
     }
     if (win) {
@@ -94,9 +94,19 @@ async function setForegroundWindow(windowId) {
 }
 
 /**
+ * @returns {number|null} windowId
+ */
+ function getForegroundWindow() {
+    if (win) {
+        return win.GetForegroundWindow();
+    }
+    return null;
+}
+
+/**
  * @param {number} x
  * @param {number} y
- * @returns {number} windowId
+ * @returns {number|null} windowId
  */
 function windowFromPoint(x, y) {
     if (win) {
@@ -111,7 +121,7 @@ function windowFromPoint(x, y) {
 }
 
 /**
- * @returns {{x: number, y: number}}
+ * @returns {{x: number, y: number}|null}
  */
 function getMousePos() {
     if (win) {
@@ -277,7 +287,7 @@ function setKeyState(key, down, modifiersOrNull = []) {
         }
     } else {
         down && robot.typeString(key);
-        return;
+        return true;
     }
     robot.keyToggle(key, down ? 'down' : 'up', modifiers.map(m => robotjsKeys[m] || m.toLowerCase()).filter(m => m != key));
     return true;
@@ -351,6 +361,7 @@ module.exports = {
     getWindows: getWindows,
     getWindowBounds: getWindowBounds,
     setForegroundWindow: setForegroundWindow,
+    getForegroundWindow: getForegroundWindow,
     windowFromPoint: windowFromPoint,
     getMousePos: getMousePos,
     setMousePos: setMousePos,
@@ -358,7 +369,6 @@ module.exports = {
     toggleMouseButton: toggleMouseButton,
     getKeyState: getKeyState,
     setKeyState: setKeyState,
-    toggleKey: setKeyState, // deprecated
     tapKey: tapKey,
     typeString: typeString,
     getDisplays: getDisplays,
