@@ -16,7 +16,7 @@ npm install karakurijs
 ```
 
 ```js
-const karakuri = require('..');
+const karakuri = require('karakurijs');
 
 let pos = karakuri.getMousePos();
 console.log(pos);
@@ -68,6 +68,8 @@ key: Same string as [KeyboardEvent.key](https://developer.mozilla.org/en-US/docs
 - getWindowInfo(windowId: number)
 - getWindowBounds(windowId: number)
 - setForegroundWindow(windowId: number)
+- getForegroundWindow() [Windows only]
+- dropFiles(windowId: number, files: string[], x: numnber, y: number) [Windows only]
 
 windowId: hWnd(Windows) or window number(MacOS)
 
